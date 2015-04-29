@@ -16,6 +16,7 @@ import sw.graph.Graph;
 import sw.SIRSimulation;
 
 public class Window extends JFrame {
+
 	public static final long serialVersionUID = 41L;
 	protected SIRSimulation simulation;
 	protected NetworkDisplay networkDisplay;
@@ -24,6 +25,17 @@ public class Window extends JFrame {
 	protected Graph graph;
 	double alpha;
 	double gamma;
+	int iniInfectNum = 1;
+
+	public void setIniInfectNum(int num) {
+		iniInfectNum = num;
+		simulation.addInfectedByN(num);
+	}
+
+	public int nodeLimit() {
+		return graph.getNumberNodes();
+	}
+
 	public Window(Configuration conf) {
 		super("Small World Network Simulator");
 
@@ -39,12 +51,13 @@ public class Window extends JFrame {
 		BoxLayout boxLayout = new BoxLayout(settingsPanel, BoxLayout.PAGE_AXIS);
 		settingsPanel.setLayout(boxLayout);
 
-		GraphSettingsPanel graphSettingsPanel = new GraphSettingsPanel(conf,graph,networkDisplay);
+		GraphSettingsPanel graphSettingsPanel = new GraphSettingsPanel(conf, graph, networkDisplay);
 		settingsPanel.add(graphSettingsPanel);
 
 		SIRSettingsPanel sirSettingsPanel = new SIRSettingsPanel(conf,this);
 		settingsPanel.add(sirSettingsPanel);
 
+		//TODO: make the simulation speed configurable?
 		simulation = new SIRSimulation(graph, 1000, alpha, gamma, this);
 
 		JPanel buttonGroup = new JPanel();
@@ -123,4 +136,6 @@ public class Window extends JFrame {
 	public void setGamma(double gamma) {
 		this.gamma = gamma;
 	}
+
+
 }

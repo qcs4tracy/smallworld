@@ -5,7 +5,6 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
 import java.awt.Component;
-import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -16,7 +15,7 @@ import sw.graph.Graph;
 
 public class GraphSettingsPanel extends JPanel {
 	public static final long serialVersionUID = 41L;
-	public GraphSettingsPanel(Configuration conf, Graph graph, NetworkDisplay networkDisplay) {
+	public GraphSettingsPanel(final Configuration conf, final Graph graph, final NetworkDisplay networkDisplay) {
 		super();
 
 		final int minNumNodes = Integer.parseInt(conf.getPropertyValue("numNodes", "min"));
@@ -42,7 +41,7 @@ public class GraphSettingsPanel extends JPanel {
 		probabilitySliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(probabilitySliderLabel);
 
-		JSlider probabilitySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
+		final JSlider probabilitySlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
 		probabilitySlider.setMajorTickSpacing(50);
 		probabilitySlider.setPaintTicks(true);
 		probabilitySlider.setPaintLabels(true);
@@ -63,7 +62,6 @@ public class GraphSettingsPanel extends JPanel {
 			public void stateChanged(ChangeEvent e) {
 				graph.setNumberNodes(((JSlider)e.getSource()).getValue());
 				networkDisplay.repaint();
-
 				probabilitySlider.setValue(0);
 			}
 		});

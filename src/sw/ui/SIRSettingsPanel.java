@@ -1,22 +1,24 @@
 package sw.ui;
 
-import java.awt.Component;
-import javax.swing.JSlider;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.BoxLayout;
-import javax.swing.BorderFactory;
+import java.awt.*;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.MouseInputAdapter;
+import javax.swing.text.StringContent;
+import java.awt.event.*;
 import java.util.Hashtable;
+import java.util.Vector;
 
 import sw.Configuration;
 
 public class SIRSettingsPanel extends JPanel {
-	public static final long serialVersionUID = 41L;
-	public SIRSettingsPanel(Configuration configuration, Window window) {
-		super();
 
+	public static final long serialVersionUID = 41L;
+
+	public SIRSettingsPanel(final Configuration configuration, final Window window) {
+
+		super();
 		setBorder(BorderFactory.createTitledBorder("SIR settings"));
 		BoxLayout boxLayout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
 		setLayout(boxLayout);
@@ -60,5 +62,43 @@ public class SIRSettingsPanel extends JPanel {
 			}
 		});
 		add(gammaSlider);
+
+		JLabel initInfectLabel = new JLabel("# of Initial Infected Cases:", JLabel.CENTER);
+		initInfectLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		//add(initInfectLabel);
+
+		final int defaultNumNodes = Integer.parseInt(configuration.getPropertyValue("numNodes", "default"));
+		final JComboBox comboBox = new JComboBox(new Range(defaultNumNodes));
+
+		comboBox.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent focusEvent) {
+				super.focusGained(focusEvent);
+				int limit = window.nodeLimit();
+				JComboBox bx = (JComboBox) focusEvent.getSource();
+				if (bx.getModel().getSize() != limit) {
+					bx.setModel(new DefaultComboBoxModel(new Range(limit)));
+					bx.showPopup();
+				}
+			}
+		});
+
+		comboBox.addActionListener(
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						JComboBox bx = (JComboBox) e.getSource();
+						Integer initCnt = (Integer) bx.getSelectedItem();
+						window.setIniInfectNum(initCnt);
+					}
+				}
+		);
+
+		JPanel pane = new JPanel(new FlowLayout());
+		pane.add(initInfectLabel);
+		pane.add(comboBox);
+		add(pane);
 	}
+
+
 }
